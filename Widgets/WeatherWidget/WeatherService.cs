@@ -93,17 +93,45 @@ namespace WeatherWidget
             }
         }
 
+        // Hardcoded default cities for fallback (accurate coordinates)
+        private static readonly Dictionary<string, (double lat, double lon, string tz)> DefaultCities = new()
+        {
+            { "北京", (39.9075, 116.39723, "Asia/Shanghai") },
+            { "Beijing", (39.9075, 116.39723, "Asia/Shanghai") },
+            { "上海", (31.2304, 121.4737, "Asia/Shanghai") },
+            { "Shanghai", (31.2304, 121.4737, "Asia/Shanghai") },
+            { "Tashkent", (41.2995, 69.2401, "Asia/Tashkent") },
+            { "塔什干", (41.2995, 69.2401, "Asia/Tashkent") }
+        };
+
         /// <summary>
         /// Get weather by city name
         /// </summary>
         public async Task<(CityInfo? city, WeatherData? weather)> GetWeatherByCityAsync(string cityName)
         {
-            var city = await SearchCityAsync(cityName);
-            if (city == null)
+            // Try hardcoded default first
+            if (DefaultCities.TryGetValue(cityName, out var coords))
+            {
+                var city = new CityInfo
+                {
+                    Name = cityName,
+                    Country = cityName.Contains("北京") || cityName == "Beijing" ? "中国" : 
+                              cityName.Contains("上海") || cityName == "Shanghai" ? "中国" : "Uzbekistan",
+                    Latitude = coords.lat,
+                    Longitude = coords.lon,
+                    Timezone = coords.tz
+                };
+                var weather = await GetWeatherAsync(coords.lat, coords.lon, coords.tz);
+                return (city, weather);
+            }
+
+            // Fallback to API search
+            var searchedCity = await SearchCityAsync(cityName);
+            if (searchedCity == null)
                 return (null, null);
 
-            var weather = await GetWeatherAsync(city.Latitude, city.Longitude, city.Timezone);
-            return (city, weather);
+            var searchedWeather = await GetWeatherAsync(searchedCity.Latitude, searchedCity.Longitude, searchedCity.Timezone);
+            return (searchedCity, searchedWeather);
         }
     }
 
