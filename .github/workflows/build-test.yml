@@ -1,4 +1,4 @@
-name: Build, Analyze and Test
+name: Build, Test, and Analyze
 
 on:
   push:
@@ -26,57 +26,95 @@ jobs:
     - name: Build
       run: dotnet build SmartDesktopAssistant.sln --configuration Release --no-restore
     
+    # Security: Check for vulnerable dependencies
+    - name: Security Scan - Vulnerable Packages
+      run: |
+        Write-Host "=========================================="
+        Write-Host "Security: Checking for vulnerable packages"
+        Write-Host "=========================================="
+        dotnet list package --vulnerable --include-transitive
+        if ($LASTEXITCODE -ne 0) {
+          Write-Host "::warning::Vulnerable packages found!"
+        }
+      shell: pwsh
+      continue-on-error: true
+    
+    # Unit Tests with Coverage
     - name: Run Unit Tests with Coverage
       run: |
         dotnet test Tests/SmartDesktopAssistant.Tests/SmartDesktopAssistant.Tests.csproj `
           --configuration Release --no-build `
           --verbosity normal `
           --logger "trx;LogFileName=test-results.trx" `
-          --collect:"XPlat Code Coverage"
+          --collect:"XPlat Code Coverage" `
+          --results-directory ./TestResults
       continue-on-error: true
     
+    # Coverage Report
     - name: Generate Coverage Report
       run: |
         Write-Host "=========================================="
         Write-Host "Code Coverage Report"
         Write-Host "=========================================="
         
-        # Find coverage file
-        $coverageFile = Get-ChildItem -Path ".\Tests" -Recurse -Filter "coverage.cobertura.xml" | Select-Object -First 1
+        $coverageFile = Get-ChildItem -Path "./TestResults" -Recurse -Filter "coverage.cobertura.xml" | Select-Object -First 1
         if ($coverageFile) {
-          Write-Host "Coverage file found: $($coverageFile.FullName)"
-          
-          # Parse coverage percentage
           [xml]$xml = Get-Content $coverageFile.FullName
-          $lineRate = $xml.coverage.'line-rate'
-          $branchRate = $xml.coverage.'branch-rate'
+          $lineRate = [double]$xml.coverage.'line-rate'
+          $coveragePercent = [math]::Round($lineRate * 100, 2)
           
-          Write-Host "Line Coverage: $([math]::Round([double]$lineRate * 100, 2))%"
-          Write-Host "Branch Coverage: $([math]::Round([double]$branchRate * 100, 2))%"
+          Write-Host "Line Coverage: $coveragePercent%"
+          Write-Host "Target: 80%"
           
-          # Check threshold (80%)
-          if ([double]$lineRate -lt 0.8) {
-            Write-Host "::warning::Coverage is below 80% threshold"
+          if ($lineRate -lt 0.8) {
+            Write-Host "::warning::Coverage is below 80% threshold (current: $coveragePercent%)"
           } else {
             Write-Host "::notice::Coverage meets 80% threshold!"
           }
-        } else {
-          Write-Host "No coverage file found"
+          
+          # Save for artifact
+          "Coverage: $coveragePercent%" | Out-File -FilePath "./TestResults/coverage-summary.txt"
         }
       shell: pwsh
     
-    - name: Performance Threshold Check
-      if: always()
+    # Performance Threshold Check
+    - name: Performance Baseline Check
       run: |
         Write-Host "=========================================="
         Write-Host "Performance Thresholds"
         Write-Host "=========================================="
-        Write-Host "Startup time: < 5000ms (critical), < 3000ms (warning)"
-        Write-Host "Memory usage: < 150MB (critical), < 80MB (warning)"
-        Write-Host "CPU idle: < 50% (critical), < 30% (warning)"
-        Write-Host "Weather API: < 5000ms (critical), < 2000ms (warning)"
+        Write-Host "| Metric | Warning | Critical |"
+        Write-Host "|--------|---------|----------|"
+        Write-Host "| Startup Time | 3000ms | 5000ms |"
+        Write-Host "| Memory (Idle) | 80MB | 150MB |"
+        Write-Host "| CPU (Idle) | 30% | 50% |"
+        Write-Host "| Weather API | 2000ms | 5000ms |"
       shell: pwsh
     
+    # Generate Test Report
+    - name: Generate Test Summary
+      if: always()
+      run: |
+        Write-Host "=========================================="
+        Write-Host "Test Summary"
+        Write-Host "=========================================="
+        
+        $trxFile = Get-ChildItem -Path "./TestResults" -Filter "*.trx" -Recurse | Select-Object -First 1
+        if ($trxFile) {
+          [xml]$trx = Get-Content $trxFile.FullName
+          $results = $trx.TestRun.ResultSummary.Counters
+          
+          Write-Host "Total: $($results.total)"
+          Write-Host "Passed: $($results.passed)"
+          Write-Host "Failed: $($results.failed)"
+          Write-Host "Skipped: $($results.notExecuted)"
+          
+          # Save summary
+          "Total: $($results.total), Passed: $($results.passed), Failed: $($results.failed)" | Out-File -FilePath "./TestResults/test-summary.txt"
+        }
+      shell: pwsh
+    
+    # Upload Artifacts
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -92,6 +130,15 @@ jobs:
       with:
         name: test-results
         path: |
-          Tests/SmartDesktopAssistant.Tests/TestResults/*.trx
-          Tests/**/coverage.cobertura.xml
+          TestResults/
         retention-days: 7
+    
+    # Final Status
+    - name: Check Results
+      if: always()
+      run: |
+        Write-Host "=========================================="
+        Write-Host "CI Pipeline Complete"
+        Write-Host "=========================================="
+        Write-Host "Check artifacts for detailed results"
+      shell: pwsh
