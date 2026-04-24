@@ -21,6 +21,9 @@ namespace SmartDesktopAssistant
         {
             base.OnStartup(e);
 
+            // Setup global exception handlers (P0 fix)
+            SetupExceptionHandlers();
+
             // Create system tray icon
             SetupNotifyIcon();
 
@@ -205,6 +208,33 @@ namespace SmartDesktopAssistant
                 _filesWindow.Show();
                 _filesWindow.Activate();
             }
+        }
+
+        private void SetupExceptionHandlers()
+        {
+            // UI thread exceptions
+            DispatcherUnhandledException += (s, args) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"[UI Exception] {args.Exception.Message}");
+                System.Windows.MessageBox.Show(
+                    $"发生错误：{args.Exception.Message}\n\n应用将尝试恢复",
+                    "错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                args.Handled = true; // Prevent crash
+            };
+
+            // Non-UI thread exceptions
+            AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+            {
+                var ex = args.ExceptionObject as Exception;
+                System.Diagnostics.Debug.WriteLine($"[Unhandled Exception] {ex?.Message}");
+            };
+
+            // Task exceptions
+            System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (s, args) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"[Task Exception] {args.Exception.Message}");
+                args.SetObserved();
+            };
         }
 
         private void ExitApplication()

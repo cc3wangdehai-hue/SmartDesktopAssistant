@@ -16,6 +16,7 @@ namespace WeatherWidget
         private string _city1 = "北京";
         private string _city2 = "上海";
         private bool _isLoading = false;
+        private bool _isUpdating = false; // Prevent re-entry
 
         public WeatherWindow()
         {
@@ -113,8 +114,10 @@ namespace WeatherWidget
 
         public async System.Threading.Tasks.Task RefreshWeather()
         {
-            if (_isLoading) return;
+            // Prevent re-entry
+            if (_isLoading || _isUpdating) return;
             _isLoading = true;
+            _isUpdating = true;
             LoadingBorder.Visibility = Visibility.Visible;
             ErrorBorder.Visibility = Visibility.Collapsed;
 
@@ -162,6 +165,7 @@ namespace WeatherWidget
             {
                 LoadingBorder.Visibility = Visibility.Collapsed;
                 _isLoading = false;
+                _isUpdating = false;
             }
         }
 
