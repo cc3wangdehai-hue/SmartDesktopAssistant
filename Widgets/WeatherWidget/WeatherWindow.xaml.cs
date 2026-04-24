@@ -126,6 +126,10 @@ namespace WeatherWidget
                     if (weather1.MaxTemps.Length > 0) TxtHigh1.Text = $"{(int)Math.Round(weather1.MaxTemps[0])}°";
                     if (weather1.MinTemps.Length > 0) TxtLow1.Text = $"{(int)Math.Round(weather1.MinTemps[0])}°";
                 }
+                else
+                {
+                    TxtCity1.Text = _city1 + " (未找到)";
+                }
 
                 var (city2, weather2) = await _weatherService.GetWeatherByCityAsync(_city2);
                 if (city2 != null && weather2 != null)
@@ -136,10 +140,20 @@ namespace WeatherWidget
                     if (weather2.MaxTemps.Length > 0) TxtHigh2.Text = $"{(int)Math.Round(weather2.MaxTemps[0])}°";
                     if (weather2.MinTemps.Length > 0) TxtLow2.Text = $"{(int)Math.Round(weather2.MinTemps[0])}°";
                 }
+                else
+                {
+                    TxtCity2.Text = _city2 + " (未找到)";
+                }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"RefreshWeather Error: {ex.Message}");
                 ErrorBorder.Visibility = Visibility.Visible;
+                // 显示错误信息
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Inner: {ex.InnerException.Message}");
+                }
             }
             finally
             {

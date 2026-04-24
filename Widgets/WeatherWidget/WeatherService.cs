@@ -18,7 +18,7 @@ namespace WeatherWidget
         public WeatherService()
         {
             _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromSeconds(10);
+            _httpClient.Timeout = TimeSpan.FromSeconds(30);
         }
 
         /// <summary>

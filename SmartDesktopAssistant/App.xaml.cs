@@ -24,21 +24,42 @@ namespace SmartDesktopAssistant
             // Create system tray icon
             SetupNotifyIcon();
 
-            // Create and show independent widget windows
-            _weatherWindow = new WeatherWindow();
-            _weatherWindow.Left = 100;
-            _weatherWindow.Top = 100;
-            _weatherWindow.Show();
+            // Create and show independent widget windows with error handling
+            try
+            {
+                _weatherWindow = new WeatherWindow();
+                _weatherWindow.Left = 100;
+                _weatherWindow.Top = 100;
+                _weatherWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"天气窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
-            _todoWindow = new TodoWindow();
-            _todoWindow.Left = 320;
-            _todoWindow.Top = 100;
-            _todoWindow.Show();
+            try
+            {
+                _todoWindow = new TodoWindow();
+                _todoWindow.Left = 320;
+                _todoWindow.Top = 100;
+                _todoWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"待办窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
-            _filesWindow = new FilesWindow();
-            _filesWindow.Left = 100;
-            _filesWindow.Top = 400;
-            _filesWindow.Show();
+            try
+            {
+                _filesWindow = new FilesWindow();
+                _filesWindow.Left = 100;
+                _filesWindow.Top = 400;
+                _filesWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"文件窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void SetupNotifyIcon()
