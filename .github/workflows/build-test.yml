@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: windows-latest
     
     steps:
@@ -26,10 +26,30 @@ jobs:
     - name: Build
       run: dotnet build SmartDesktopAssistant.sln --configuration Release --no-restore
     
-    - name: Run basic tests
+    - name: Run Unit Tests
+      run: dotnet test Tests/SmartDesktopAssistant.Tests/SmartDesktopAssistant.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+      continue-on-error: true
+    
+    - name: Test Results Summary
+      if: always()
       run: |
-        Write-Host "Build completed successfully!"
-        Write-Host "Checking output files..."
+        Write-Host "=========================================="
+        Write-Host "Test Results Summary"
+        Write-Host "=========================================="
+        $trxFile = ".\Tests\SmartDesktopAssistant.Tests\TestResults\test-results.trx"
+        if (Test-Path $trxFile) {
+          Write-Host "Test results saved to: $trxFile"
+          Write-Host "Download artifacts to see detailed results"
+        } else {
+          Write-Host "No test results file found"
+        }
+      shell: pwsh
+    
+    - name: Check build output
+      run: |
+        Write-Host "=========================================="
+        Write-Host "Build Output Check"
+        Write-Host "=========================================="
         $dlls = Get-ChildItem -Path ".\Output" -Filter "*.dll" -ErrorAction SilentlyContinue
         if ($dlls) {
           Write-Host "Found DLLs:"
@@ -47,4 +67,12 @@ jobs:
           Output/*.dll
           Output/*.exe
           Output/*.json
+        retention-days: 7
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: Tests/SmartDesktopAssistant.Tests/TestResults/*.trx
         retention-days: 7
