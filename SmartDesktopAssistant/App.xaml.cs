@@ -34,7 +34,7 @@ namespace SmartDesktopAssistant
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"天气窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show($"天气窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             try
@@ -46,7 +46,7 @@ namespace SmartDesktopAssistant
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"待办窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show($"待办窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             try
@@ -58,7 +58,7 @@ namespace SmartDesktopAssistant
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"文件窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show($"文件窗口初始化失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
