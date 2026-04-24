@@ -43,7 +43,7 @@ namespace TodoWidget
             
             // Sort: uncompleted first, then by creation time
             var sorted = items
-                .OrderByDescending(i => i.IsCompleted == false)
+                .OrderByDescending(i => !i.IsCompleted)
                 .ThenByDescending(i => i.CreatedAt);
             
             foreach (var item in sorted)

@@ -79,9 +79,9 @@ namespace WeatherWidget
             _ = RefreshWeather();
         }
 
-        private void Retry_Click(object sender, MouseButtonEventArgs e)
+        private async void Retry_Click(object sender, MouseButtonEventArgs e)
         {
-            _ = RefreshWeather();
+            await RefreshWeather();
         }
 
         private void Timer_Tick(object? sender, EventArgs e)

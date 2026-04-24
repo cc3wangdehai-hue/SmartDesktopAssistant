@@ -180,7 +180,7 @@ namespace TodoWidget
         public void SetLarkSyncEnabled(bool enabled)
         {
             _syncEnabled = enabled;
-            BtnSync.Visibility = enabled ? Visibility.Visible : Visibility.Visible;
+            BtnSync.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private TodoSettings LoadSettings()
