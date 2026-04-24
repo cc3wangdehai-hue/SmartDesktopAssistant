@@ -7,6 +7,10 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <UseWPF>true</UseWPF>
+    <!-- Code Coverage Target: 80% -->
+    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+    <CoverletOutput>$(MSBuildThisFileDirectory)coverage.xml</CoverletOutput>
+    <Threshold>80</Threshold>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +27,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
-  <!-- Reference to Widget projects for testing core logic -->
   <ItemGroup>
     <ProjectReference Include="..\..\Widgets\WeatherWidget\WeatherWidget.csproj" />
     <ProjectReference Include="..\..\Widgets\TodoWidget\TodoWidget.csproj" />
