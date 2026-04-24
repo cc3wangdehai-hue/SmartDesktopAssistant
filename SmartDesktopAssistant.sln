@@ -53,3 +53,13 @@ Global
 		{E5F6A7B8-5678-9ABC-DEF0-123456789012}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIAutomationTests", "Tests\UIAutomationTests\UIAutomationTests.csproj", "{F6A7B8C9-6789-0ABC-DEF0-123456789ABC}"
+EndProject
+Global
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6A7B8C9-6789-0ABC-DEF0-123456789ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A7B8C9-6789-0ABC-DEF0-123456789ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A7B8C9-6789-0ABC-DEF0-123456789ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A7B8C9-6789-0ABC-DEF0-123456789ABC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
