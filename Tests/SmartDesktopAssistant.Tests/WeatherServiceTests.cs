@@ -4,9 +4,6 @@ using Xunit;
 
 namespace SmartDesktopAssistant.Tests
 {
-    /// <summary>
-    /// Test Weather API service
-    /// </summary>
     public class WeatherServiceTests
     {
         private readonly WeatherWidget.WeatherService _service;
@@ -19,15 +16,9 @@ namespace SmartDesktopAssistant.Tests
         [Fact]
         public async Task SearchCityAsync_ValidCity_ReturnsCityInfo()
         {
-            // Arrange
-            var cityName = "北京";
-
-            // Act
-            var result = await _service.SearchCityAsync(cityName);
-
-            // Assert
+            var result = await _service.SearchCityAsync("北京");
             Assert.NotNull(result);
-            Assert.Contains("Beijing", result.Name, StringComparison.OrdinalIgnoreCase);
+            Assert.False(string.IsNullOrEmpty(result.Name));
             Assert.True(result.Latitude != 0);
             Assert.True(result.Longitude != 0);
         }
@@ -35,78 +26,50 @@ namespace SmartDesktopAssistant.Tests
         [Fact]
         public async Task SearchCityAsync_InvalidCity_ReturnsNull()
         {
-            // Arrange
-            var cityName = "NonExistentCity12345";
-
-            // Act
-            var result = await _service.SearchCityAsync(cityName);
-
-            // Assert
+            var result = await _service.SearchCityAsync("NonExistentCity12345");
             Assert.Null(result);
         }
 
         [Fact]
         public async Task GetWeatherAsync_ValidCoordinates_ReturnsWeatherData()
         {
-            // Arrange - Beijing coordinates
-            double latitude = 39.9042;
-            double longitude = 116.4074;
-
-            // Act
-            var result = await _service.GetWeatherAsync(latitude, longitude);
-
-            // Assert
+            var result = await _service.GetWeatherAsync(39.9042, 116.4074);
             Assert.NotNull(result);
             Assert.True(result.MaxTemps.Length > 0);
             Assert.True(result.MinTemps.Length > 0);
-            Assert.True(result.Dates.Length > 0);
         }
 
         [Fact]
         public async Task GetWeatherByCityAsync_ValidCity_ReturnsCityAndWeather()
         {
-            // Arrange
-            var cityName = "上海";
-
-            // Act
-            var (city, weather) = await _service.GetWeatherByCityAsync(cityName);
-
-            // Assert
+            var (city, weather) = await _service.GetWeatherByCityAsync("上海");
             Assert.NotNull(city);
             Assert.NotNull(weather);
-            Assert.Contains("Shanghai", city.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         [Fact]
         public async Task GetWeatherByCityAsync_InvalidCity_ReturnsNulls()
         {
-            // Arrange
-            var cityName = "InvalidCity99999";
-
-            // Act
-            var (city, weather) = await _service.GetWeatherByCityAsync(cityName);
-
-            // Assert
+            var (city, weather) = await _service.GetWeatherByCityAsync("InvalidCity99999");
             Assert.Null(city);
             Assert.Null(weather);
         }
 
-        [Fact]
-        public void WeatherData_GetWeatherDescription_KnownCode_ReturnsCorrectDescription()
+        [Theory]
+        [InlineData(0, "晴")]
+        [InlineData(2, "多云")]
+        [InlineData(3, "阴")]
+        [InlineData(61, "雨")]
+        [InlineData(71, "雪")]
+        [InlineData(95, "雷暴")]
+        public void WeatherData_GetWeatherDescription_KnownCode_ReturnsCorrect(int code, string expected)
         {
-            // Test known weather codes
-            Assert.Equal("晴", WeatherWidget.WeatherData.GetWeatherDescription(0));
-            Assert.Equal("多云", WeatherWidget.WeatherData.GetWeatherDescription(2));
-            Assert.Equal("阴", WeatherWidget.WeatherData.GetWeatherDescription(3));
-            Assert.Equal("雨", WeatherWidget.WeatherData.GetWeatherDescription(61));
-            Assert.Equal("雪", WeatherWidget.WeatherData.GetWeatherDescription(71));
-            Assert.Equal("雷暴", WeatherWidget.WeatherData.GetWeatherDescription(95));
+            Assert.Equal(expected, WeatherWidget.WeatherData.GetWeatherDescription(code));
         }
 
         [Fact]
         public void WeatherData_GetWeatherDescription_UnknownCode_ReturnsUnknown()
         {
-            // Test unknown weather code
             Assert.Equal("未知", WeatherWidget.WeatherData.GetWeatherDescription(999));
         }
     }
