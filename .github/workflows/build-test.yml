@@ -1,0 +1,50 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore SmartDesktopAssistant.sln
+    
+    - name: Build
+      run: dotnet build SmartDesktopAssistant.sln --configuration Release --no-restore
+    
+    - name: Run basic tests
+      run: |
+        Write-Host "Build completed successfully!"
+        Write-Host "Checking output files..."
+        $dlls = Get-ChildItem -Path ".\Output" -Filter "*.dll" -ErrorAction SilentlyContinue
+        if ($dlls) {
+          Write-Host "Found DLLs:"
+          $dlls | ForEach-Object { Write-Host "  - $($_.Name)" }
+        } else {
+          Write-Host "No DLLs found in Output folder"
+        }
+      shell: pwsh
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: SmartDesktopAssistant-build
+        path: |
+          Output/*.dll
+          Output/*.exe
+          Output/*.json
+        retention-days: 7

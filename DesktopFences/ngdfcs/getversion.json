@@ -1,0 +1,12 @@
+{
+  "Meta": {
+    "LatestVersion": "2.6.6.234",
+    "CriticalUpdate": false,
+    "DownloadUrl": "https://github.com/limbo666/DesktopFences/releases/tag/2.6.6.236",
+    "ForceKillSwitch": false
+  },
+  "RemoteSettings": {
+    "EnableBackgroundLogging": false,
+    "SearchEngineUrl": ""
+  }
+}

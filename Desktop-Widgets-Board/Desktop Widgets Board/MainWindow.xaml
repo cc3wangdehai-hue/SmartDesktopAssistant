@@ -1,0 +1,296 @@
+﻿<Window x:Class="Desktop_Widgets_Board.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:uc="clr-namespace:Desktop_Widgets_Board.UserControls"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Height="1000" Width="480" WindowStartupLocation="CenterScreen" 
+        AllowsTransparency="True" WindowStyle="None" Background="Transparent" 
+        FontFamily="Nirmala UI" ResizeMode="NoResize" Topmost="True">
+        
+    <Grid MouseDown="Border_MouseDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="220"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="300"/>
+            <RowDefinition Height="230"/>
+            <RowDefinition Height="200"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="450"/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- App's Control Panel -->
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Vertical">
+            <Button Margin="0 10 10 5" Click="Button_Click" Style="{StaticResource quickPanelButton}">
+                <icon:PackIconMaterial Kind="Close" Style="{StaticResource iconAppControl}"/>
+            </Button>
+            <Button Margin="0 10 10 5" Style="{StaticResource quickPanelButton}">
+                <icon:PackIconMaterial Kind="WindowMinimize" Style="{StaticResource iconAppControl}"/>
+            </Button>
+            <Button Margin="0 5 10 5" Style="{StaticResource quickPanelButton}">
+                <icon:PackIconMaterial Kind="Cog" Style="{StaticResource iconAppControl}"/>
+            </Button>
+        </StackPanel>       
+
+        <!-- Weather widget -->
+        <Border Grid.Row="1" Grid.RowSpan="2" Style="{StaticResource weatherWidgetBorder}">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#00a6fb"/>
+                    <GradientStop Color="#006ba6" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Text="Hamburg" Foreground="#fef9ff" 
+                           FontSize="18" FontWeight="SemiBold"
+                           />
+
+                <Label     Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Content="22°" 
+                           Foreground="#fef9ff" FontSize="50" FontWeight="Thin" 
+                           VerticalContentAlignment="Center" 
+                           Padding="0" Margin="0,12,0,0"   
+                           />
+                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal">
+                    <Image Source="C:\Users\sasha\Desktop\sunny.png" />
+                    <Grid Margin="5 0 0 0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Sunny" Foreground="#fef9ff" FontSize="14"/>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <icon:PackIconMaterial Kind="ArrowUp" Foreground="#fef9ff" Height="8" Width="8"
+                                                   VerticalAlignment="Center" />
+                            <TextBlock Text="23°" VerticalAlignment="Center" Margin="2" Foreground="#fef9ff" FontSize="14"/>
+                            <icon:PackIconMaterial Kind="ArrowDown" Foreground="#fef9ff" Height="8" Width="8" 
+                                                   VerticalAlignment="Center"/>
+                            <TextBlock Text="14°" VerticalAlignment="Center" Margin="2" Foreground="#fef9ff" FontSize="14"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                </StackPanel>
+                <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" CornerRadius="10" 
+                        Margin="-5 0 -5 0" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>                            
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="0" Grid.Column="0" Content="Today" />
+                        <Image Grid.Row="1" Grid.Column="0" Source="\Images\sunny.png" Width="Auto" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="0" Grid.Column="1" Content="Mon" />
+                        <Image Grid.Row="1" Grid.Column="1" Source="\Images\sunny.png" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="0" Grid.Column="2" Content="Tue" />
+                        <Image Grid.Row="1" Grid.Column="2" Source="\Images\rain.png" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="0" Grid.Column="3" Content="Wed" />
+                        <Image Grid.Row="1" Grid.Column="3" Source="\Images\cloudy.png" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="0" Grid.Column="4" Content="Thu" />
+                        <Image Grid.Row="1" Grid.Column="4" Source="\Images\showers.png" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="0" Grid.Column="5" Content="Fri" />
+                        <Image Grid.Row="1" Grid.Column="5" Source="\Images\rain.png" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="0" Grid.Column="6" Content="Sat" />
+                        <Image Grid.Row="1" Grid.Column="6" Source="\Images\rain.png" />
+
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="3" Grid.Column="0" Content="20°/11°" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="3" Grid.Column="1" Content="22°/13°" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="3" Grid.Column="2" Content="18°/9°" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="3" Grid.Column="3" Content="20°/12°" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="3" Grid.Column="4" Content="21°/10°" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="3" Grid.Column="5" Content="19°/9°" />
+                        <Label Style="{StaticResource timeLabel}" Grid.Row="3" Grid.Column="6" Content="18°/7°" />
+                        
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Quick Access Panel -->
+        <Border Grid.Row="2" Background="#006ba6" CornerRadius="0 0 15 15" Margin="10 0 10 0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">    
+            <Button Click="Button_Click_1"
+                    Style="{StaticResource quickPanelButton}">
+                <fa:ImageAwesome Icon="Github" Style="{StaticResource icon}"/>
+            </Button>
+            <Button Style="{StaticResource quickPanelButton}">
+                <fa:ImageAwesome Icon="YoutubePlay" Style="{StaticResource icon}" Margin="0 4 0 0" />
+            </Button>
+            <Button Style="{StaticResource quickPanelButton}">
+                    <fa:ImageAwesome Icon="Amazon" Style="{StaticResource icon}" Margin="0 4 0 0" />
+            </Button>
+            <Button Style="{StaticResource quickPanelButton}" > 
+                <fa:ImageAwesome Icon="Xing" Style="{StaticResource icon}"/>
+            </Button>
+            <Button Style="{StaticResource quickPanelButton}">
+                <fa:ImageAwesome Icon="Linkedin" Style="{StaticResource icon}"/>
+            </Button>            
+        </StackPanel>
+        </Border>
+
+        <!-- Appointment Calendar widget -->
+        <Border Grid.Row="3" Style="{StaticResource widgetBorder}" Margin="10 20 10 10" BorderThickness="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="2.8*"/>
+                </Grid.RowDefinitions>
+
+                <Border CornerRadius="0 15 15 0" Grid.Column="1" Grid.RowSpan="2" 
+                        Background="#4ba3c3"/>
+                <StackPanel Grid.Row="0" Grid.Column="0" >
+                    <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                        <Label x:Name="label" Foreground="#1e1b18" FontSize="50" 
+                       Content="3" ContentStringFormat="dd" />                       
+                        <StackPanel Orientation="Vertical" Margin="0" VerticalAlignment="Center">
+                            <Label Content="June" FontSize="20" Style="{StaticResource calendarDateLabel}" />
+                            <Label Content="Saturday" Foreground="#6c757d" Style="{StaticResource calendarDateLabel}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <Calendar CalendarItemStyle="{DynamicResource CalendarCalendarItemStyle1}" SelectionMode="MultipleRange"
+                          CalendarDayButtonStyle="{DynamicResource CalendarCalendarDayButtonStyle1}" xml:lang="en-US"
+                          Style="{DynamicResource CalendarStyle1}" x:Name="calendar" Grid.Row="1">
+                    <Calendar.SelectedDates>
+                        <sys:DateTime>6/19/2023</sys:DateTime>
+                        <sys:DateTime>6/30/2023</sys:DateTime>
+                    </Calendar.SelectedDates>
+                </Calendar>
+                <Grid Grid.Column="1" Grid.RowSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <icon:PackIconMaterial Grid.Column="1" Kind="Plus" Foreground="#003459" Width="18"
+                                     VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0 0 10 0"/>
+                    <uc:CalendarItem Grid.Row="1" Margin="10 0" ItemTitle="Job interview" ItemDate="19.06.23 | 14:30" ItemColor="#ba324f" />
+                    <uc:CalendarItem Grid.Row="2" Margin="10 0" ItemTitle="Doctor appointment" ItemDate="30.06.23 | 10:10" ItemColor="#ffd166"/>
+                    <uc:CalendarItem Grid.Row="3" Margin="10 0" ItemTitle="Distr.System exam" ItemDate="20.07.23 | 09:00" ItemColor="#06d6a0"/>
+                    <uc:CalendarItem Grid.Row="4" Margin="10 0" ItemTitle="Car inspection" ItemDate="14.08.23 | 08:30" ItemColor="#ba324f"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- ToDo List widget -->
+        <Border Grid.Row="4" Style="{StaticResource widgetBorder}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.3*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="#ba324f" CornerRadius="15 15 0 0" Grid.ColumnSpan="2" />
+                                 
+                    <TextBlock Text="Todo" Foreground="#fffdf7" Margin="20 0 0 0"
+                           VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"  />                
+                
+                    <icon:PackIconMaterial Grid.Column="1" Kind="Plus" Foreground="#fef9f9" Width="18"
+                                     VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    
+                
+                <Grid Grid.Row="1" Grid.ColumnSpan="2">                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <uc:Item Grid.Row="0" Grid.ColumnSpan="2" Margin="20 5 11 5" Title="Fill and send tax declaration" BottomTitle="Until 01.10.2023"
+                                 TextStyle="Strikethrough"/>
+                    <Separator VerticalAlignment="Bottom" Margin="40 0 20 0" Background="#dee2e6"/>
+                    <uc:Item Grid.Row="1" Grid.ColumnSpan="2" Margin="20 5 11 5" Title="Call caretaker" BottomTitle="Mo, 8:00 - 9:00"
+                                 />
+                    <Separator Grid.Row="1" VerticalAlignment="Bottom" Margin="40 0 20 0" Background="#dee2e6"/>
+
+                </Grid>
+            </Grid>
+        </Border>
+        <!-- Audo Player widget -->
+        <Border Grid.Row="5" Style="{StaticResource widgetBorder}" Background="#454955">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <icon:PackIconMaterial Kind="MusicCircle" Background="Transparent" Foreground="White" Margin="20 0 0 0"
+                                       VerticalAlignment="Center" Height="20" Width="20"/>
+                <icon:PackIconMaterial Grid.Column="1" Kind="FolderOpenOutline" Background="Transparent" Foreground="White" Margin="0 0 10 0"
+                                       VerticalAlignment="Center" Height="20" Width="20" HorizontalAlignment="Right"/>
+                <Image Grid.Row="1"  Source="/Images/skalmold.jpg" VerticalAlignment="Top"
+                       Margin="20 0 0 20" HorizontalAlignment="Left" Width="Auto"/>
+
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Miðgarðsormur " Margin="10 0 0 0" FontSize="16" FontWeight="SemiBold" 
+                           Foreground="White"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Skálmöld" Margin="10 0 0 0" FontSize="14" 
+                           Foreground="#dee2e6"/>
+                        <ProgressBar Margin="10 50 20 0" Value="55" Foreground="#ba324f"/>
+                        <StackPanel Orientation="Horizontal" Margin="10 15 0 20" HorizontalAlignment="Center">
+                            <icon:PackIconMaterial Kind="Shuffle" Foreground="White" Margin="0 0 20 0" />
+                            <icon:PackIconMaterial Kind="SkipBackward" Foreground="White" Margin="0 0 20 0"/>
+                            <icon:PackIconMaterial Kind="Play" Width="20" Foreground="White" Margin="0 0 20 0" />
+                            <icon:PackIconMaterial Kind="SkipForward" Foreground="White" Margin="0 0 20 0" />                            
+                            <icon:PackIconMaterial Kind="PlaylistMusic" Foreground="White" Margin="0 0 20 0" />
+                            <icon:PackIconMaterial Kind="VolumeHigh" Foreground="White" Margin="0 0 20 0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

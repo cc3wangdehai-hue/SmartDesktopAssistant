@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>SmartDesktopAssistant</RootNamespace>
+    <AssemblyName>SmartDesktopAssistant</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
+    <Version>1.0.0</Version>
+    <Company>Smart Desktop</Company>
+    <Product>Smart Desktop Assistant</Product>
+    <Description>360-style Desktop Assistant with Weather, TODO, Clock and Files Widgets</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Widgets\WeatherWidget\WeatherWidget.csproj" />
+    <ProjectReference Include="..\Widgets\TodoWidget\TodoWidget.csproj" />
+    <ProjectReference Include="..\Widgets\FilesWidget\FilesWidget.csproj" />
+    <ProjectReference Include="..\Widgets\SettingsWidget\SettingsWidget.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+</Project>
