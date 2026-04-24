@@ -109,26 +109,27 @@ namespace FilesWidget
                     var item = new FolderItem
                     {
                         Path = path,
-                        DisplayName = Path.GetFileName(path) ?? path
+                        DisplayName = Path.GetFileName(path) ?? path,
+                        IsFile = false
                     };
                     _folders.Add(item);
                     SaveFolders();
                 }
                 else if (File.Exists(path))
                 {
-                    // It's a file - add to quick access
-                    if (_files.Any(f => f.Path.Equals(path, StringComparison.OrdinalIgnoreCase)))
+                    // It's a file - add to same list with IsFile = true
+                    if (_folders.Any(f => f.Path.Equals(path, StringComparison.OrdinalIgnoreCase)))
                     {
                         return;
                     }
                     
-                    var item = new FileItem
+                    var item = new FolderItem
                     {
                         Path = path,
                         DisplayName = Path.GetFileName(path) ?? path,
                         IsFile = true
                     };
-                    _files.Add(item);
+                    _folders.Add(item);
                     SaveFolders();
                 }
                 UpdateEmptyState();
@@ -328,6 +329,7 @@ namespace FilesWidget
     {
         public string Path { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
+        public bool IsFile { get; set; } = false;
     }
 
     public class FileItem
