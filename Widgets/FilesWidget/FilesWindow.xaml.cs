@@ -261,17 +261,29 @@ namespace FilesWidget
                         
                         foreach (var folder in data.Folders.Where(f => Directory.Exists(f.Path)))
                         {
+                            // Ensure IsFile is false for folders
+                            folder.IsFile = false;
                             _folders.Add(folder);
                         }
                         
                         foreach (var file in data.Files.Where(f => File.Exists(f.Path)))
                         {
-                            _files.Add(file);
+                            file.IsFile = true;
+                            // Convert FileItem to FolderItem for unified display
+                            _folders.Add(new FolderItem
+                            {
+                                Path = file.Path,
+                                DisplayName = file.DisplayName,
+                                IsFile = true
+                            });
                         }
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"LoadFolders Error: {ex.Message}");
+            }
             UpdateEmptyState();
         }
 
@@ -284,7 +296,10 @@ namespace FilesWidget
                 var json = JsonConvert.SerializeObject(_settings, Formatting.Indented);
                 File.WriteAllText(_configPath, json);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"SaveFolders Error: {ex.Message}");
+            }
         }
 
         private FilesSettings LoadSettings()
@@ -297,7 +312,10 @@ namespace FilesWidget
                     return JsonConvert.DeserializeObject<FilesSettings>(json) ?? new FilesSettings();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"LoadSettings Error: {ex.Message}");
+            }
             return new FilesSettings();
         }
 

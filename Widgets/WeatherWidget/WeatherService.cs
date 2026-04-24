@@ -12,11 +12,11 @@ namespace WeatherWidget
     /// </summary>
     public class WeatherService
     {
-        private readonly HttpClient _httpClient;
+        private static readonly HttpClient _httpClient;
         private const string GeocodingBaseUrl = "https://geocoding-api.open-meteo.com/v1/search";
         private const string WeatherBaseUrl = "https://api.open-meteo.com/v1/forecast";
 
-        public WeatherService()
+        static WeatherService()
         {
             _httpClient = new HttpClient();
             _httpClient.Timeout = TimeSpan.FromSeconds(30);
