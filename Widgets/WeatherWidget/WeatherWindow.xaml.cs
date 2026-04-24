@@ -36,7 +36,7 @@ namespace WeatherWidget
             _settings = LoadSettings();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (_settings.Left >= 0 && _settings.Top >= 0)
             {
@@ -48,7 +48,10 @@ namespace WeatherWidget
             
             UpdateTime();
             _timer.Start();
-            RefreshWeather();
+            
+            // Add delay to ensure UI is ready
+            await System.Threading.Tasks.Task.Delay(100);
+            _ = RefreshWeather();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
