@@ -25,7 +25,7 @@ namespace WeatherWidget
             
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromSeconds(1)
+                Interval = TimeSpan.FromSeconds(60)  // Changed from 1s to 60s to reduce CPU usage
             };
             _timer.Tick += Timer_Tick;
             

@@ -72,7 +72,19 @@ namespace SmartDesktopAssistant.Core
                     File.AppendAllText(_logPath, _buffer.ToString());
                     _buffer.Clear();
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    // Log to Debug output as fallback
+                    System.Diagnostics.Debug.WriteLine($"[Logger Error] Failed to write log: {ex.Message}");
+                    
+                    // Try fallback path
+                    try
+                    {
+                        var fallbackPath = Path.Combine(Path.GetTempPath(), "SmartDesktopAssistant_fallback.log");
+                        File.AppendAllText(fallbackPath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Logger Error: {ex.Message}\n{_buffer}");
+                    }
+                    catch { /* Give up silently - no more options */ }
+                }
             }
         }
 
